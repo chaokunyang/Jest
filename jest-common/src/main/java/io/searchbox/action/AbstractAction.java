@@ -100,7 +100,12 @@ public abstract class AbstractAction<T extends JestResult> implements Action<T> 
             return new JsonObject();
         }
 
-        JsonElement parsed = new JsonParser().parse(responseBody);
+        JsonElement parsed;
+        try {
+            parsed  = new JsonParser().parse(responseBody);
+        }catch (JsonSyntaxException e) {
+            throw new RuntimeException("Can't parse response[" + responseBody + "]", e);
+        }
         if (parsed.isJsonObject()) {
             return parsed.getAsJsonObject();
         } else {
